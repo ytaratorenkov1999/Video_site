@@ -13,18 +13,33 @@ html, body {
 body {
     background: #0a1628;
     font-family: Arial, sans-serif;
-    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
-.video-container {
-    position: absolute;
-    top: 0;
-    left: 0;
+/* Верхняя панель для кнопки - черный цвет как у плеера */
+.top-panel {
     width: 100%;
-    height: 100%;
+    height: 60px;
+    background: #000;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1000;
+    flex-shrink: 0;
+}
+
+/* Контейнер видео занимает оставшееся пространство */
+.video-container {
+    flex: 1;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    background: #000;
+    overflow: hidden;
 }
 
 video {
@@ -35,12 +50,9 @@ video {
 }
 
 .close-button {
-    position: fixed;
-    top: 20px;
-    right: 20px;
     width: 50px;
     height: 50px;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(255, 255, 255, 0.1);
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     display: flex;
@@ -48,8 +60,8 @@ video {
     align-items: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    z-index: 9999;
     backdrop-filter: blur(10px);
+    position: relative;
 }
 
 .close-button:hover {
@@ -83,9 +95,12 @@ video {
 
 /* Планшеты */
 @media (max-width: 1024px) {
+    .top-panel {
+        height: 55px;
+        padding: 0 15px;
+    }
+
     .close-button {
-        top: 15px;
-        right: 15px;
         width: 46px;
         height: 46px;
     }
@@ -93,12 +108,15 @@ video {
 
 /* Мобильные устройства */
 @media (max-width: 768px) {
+    .top-panel {
+        height: 50px;
+        padding: 0 10px;
+    }
+
     .close-button {
-        top: 10px;
-        right: 10px;
         width: 44px;
         height: 44px;
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(255, 255, 255, 0.15);
     }
 
     .close-button::before,
@@ -109,6 +127,10 @@ video {
 
 /* Маленькие экраны */
 @media (max-width: 480px) {
+    .top-panel {
+        height: 45px;
+    }
+
     .close-button {
         width: 40px;
         height: 40px;
@@ -120,11 +142,14 @@ video {
     }
 }
 
-/* Горизонтальная ориентация */
-@media (orientation: landscape) and (max-height: 600px) {
+/* Горизонтальная ориентация на мобильных - уменьшаем панель */
+@media (orientation: landscape) and (max-width: 896px) {
+    .top-panel {
+        height: 40px;
+        padding: 0 8px;
+    }
+
     .close-button {
-        top: 8px;
-        right: 8px;
         width: 38px;
         height: 38px;
     }
@@ -135,18 +160,40 @@ video {
     }
 }
 
-/* Очень низкие экраны в landscape */
+/* Очень низкие экраны в landscape - минимальная панель */
 @media (orientation: landscape) and (max-height: 400px) {
-    .close-button {
-        top: 5px;
-        right: 5px;
-        width: 35px;
+    .top-panel {
         height: 35px;
+        padding: 0 5px;
+    }
+
+    .close-button {
+        width: 32px;
+        height: 32px;
     }
 
     .close-button::before,
     .close-button::after {
         width: 14px;
+    }
+}
+
+/* Специально для iPhone */
+@supports (-webkit-touch-callout: none) {
+    .top-panel {
+        padding-top: env(safe-area-inset-top);
+    }
+
+    @media (orientation: portrait) {
+        .top-panel {
+            height: calc(50px + env(safe-area-inset-top));
+        }
+    }
+
+    @media (orientation: landscape) {
+        .top-panel {
+            height: 40px;
+        }
     }
 }
 
