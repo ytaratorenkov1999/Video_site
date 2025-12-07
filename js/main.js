@@ -25,3 +25,21 @@ document.addEventListener('keydown', (e) => {
         }
     }
 });
+
+// Предотвращаем зум на двойной тап (iOS)
+let lastTouchEnd = 0;
+document.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+        e.preventDefault();
+    }
+    lastTouchEnd = now;
+}, false);
+
+// Адаптация под изменение ориентации
+window.addEventListener('orientationchange', () => {
+    setTimeout(() => {
+        video.style.width = '100%';
+        video.style.height = '100%';
+    }, 100);
+});
